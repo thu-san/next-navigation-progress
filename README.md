@@ -1,5 +1,12 @@
 # next-navigation-progress
 
+[![npm version](https://img.shields.io/npm/v/next-navigation-progress.svg)](https://www.npmjs.com/package/next-navigation-progress)
+[![npm downloads](https://img.shields.io/npm/dm/next-navigation-progress.svg)](https://www.npmjs.com/package/next-navigation-progress)
+[![Coverage Status](https://img.shields.io/codecov/c/github/thu-san/next-navigation-progress)](https://codecov.io/gh/thu-san/next-navigation-progress)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/thu-san/next-navigation-progress/test.yml?branch=main)](https://github.com/thu-san/next-navigation-progress/actions)
+[![License](https://img.shields.io/npm/l/next-navigation-progress.svg)](https://github.com/thu-san/next-navigation-progress/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
 A lightweight, customizable navigation progress bar for Next.js applications with React 19 support. Shows a smooth progress indicator during route transitions.
 
 ## Features
@@ -52,9 +59,10 @@ export default function RootLayout({
 Add the progress bar component inside the provider:
 
 ```tsx
-import { 
-  NextNavigationProgressProvider, 
-  NextNavigationProgressBar 
+import {
+  NextNavigationProgressProvider,
+  NextNavigationProgressBar,
+  NavigationLink,
 } from 'next-navigation-progress';
 
 export default function RootLayout({
@@ -77,7 +85,23 @@ export default function RootLayout({
 
 ### 3. Trigger progress on navigation
 
-Use the `useNavigationProgress` hook with `startTransition`:
+You have two options for triggering the progress bar:
+
+#### Option A: Using NavigationLink (Recommended)
+
+The easiest way is to use the built-in `NavigationLink` component:
+
+```tsx
+import { NavigationLink } from 'next-navigation-progress';
+
+export default function MyComponent() {
+  return <NavigationLink href="/about">Go to About</NavigationLink>;
+}
+```
+
+#### Option B: Using the hook manually
+
+For more control, use the `useNavigationProgress` hook with `startTransition`:
 
 ```tsx
 import { useNavigationProgress } from 'next-navigation-progress';
@@ -96,9 +120,7 @@ export default function MyComponent() {
   };
 
   return (
-    <button onClick={() => handleNavigation('/about')}>
-      Go to About
-    </button>
+    <button onClick={() => handleNavigation('/about')}>Go to About</button>
   );
 }
 ```
@@ -112,35 +134,40 @@ export default function MyComponent() {
 The context provider that manages the progress state.
 
 ```tsx
-<NextNavigationProgressProvider>
-  {children}
-</NextNavigationProgressProvider>
+<NextNavigationProgressProvider>{children}</NextNavigationProgressProvider>
 ```
 
 #### `NextNavigationProgressBar`
 
-The progress bar component with customizable props:
+The progress bar component that displays the navigation progress.
 
 ```tsx
-<NextNavigationProgressBar
-  color="#228be6"
-  height={3}
-  showAtBottom={false}
-  // ... other props
-/>
+<NextNavigationProgressBar />
+```
+
+Currently, the progress bar uses default styling with a blue color (#228be6) and 3px height. Custom styling can be achieved by creating your own progress component using the `useNavigationProgress` hook.
+
+#### `NavigationLink`
+
+A pre-configured Link component that automatically triggers the progress bar:
+
+```tsx
+<NavigationLink href="/about" className="link-class" prefetch={false}>
+  About Page
+</NavigationLink>
 ```
 
 **Props:**
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `color` | `string` | `#228be6` | Progress bar color |
-| `height` | `number \| string` | `3` | Height of the progress bar |
-| `showAtBottom` | `boolean` | `false` | Show progress bar at bottom |
-| `zIndex` | `number` | `1600` | z-index of the progress bar |
-| `shadow` | `string \| false` | `0 0 10px #228be6, 0 0 5px #228be6` | Box shadow of the progress bar |
-| `speed` | `number` | `200` | Transition speed in ms |
-| `easing` | `string` | `ease` | CSS easing function |
+| Prop        | Type                  | Default | Description               |
+| ----------- | --------------------- | ------- | ------------------------- |
+| `href`      | `string`              | -       | The destination URL       |
+| `children`  | `React.ReactNode`     | -       | Link content              |
+| `className` | `string`              | -       | CSS class name            |
+| `style`     | `React.CSSProperties` | -       | Inline styles             |
+| `target`    | `string`              | -       | Link target attribute     |
+| `prefetch`  | `boolean`             | -       | Next.js prefetch behavior |
+| `onClick`   | `function`            | -       | Click handler             |
 
 ### Hooks
 
@@ -150,10 +177,10 @@ Returns the progress context with the following:
 
 ```tsx
 const {
-  progress,          // Current progress value (0-100)
-  startNewProgress,  // Function to start new progress
-  optimisticObj,     // { loading: boolean }
-  stateObj,         // { showing: boolean }
+  progress, // Current progress value (0-100)
+  startNewProgress, // Function to start new progress
+  optimisticObj, // { loading: boolean }
+  stateObj, // { showing: boolean }
 } = useNavigationProgress();
 ```
 
@@ -173,37 +200,8 @@ function CustomProgressBar() {
 
   return (
     <div className="custom-progress">
-      <div 
-        className="custom-progress-bar"
-        style={{ width: `${progress}%` }}
-      />
+      <div className="custom-progress-bar" style={{ width: `${progress}%` }} />
     </div>
-  );
-}
-```
-
-### With Custom Link Component
-
-```tsx
-import Link from 'next/link';
-import { useNavigationProgress } from 'next-navigation-progress';
-import { startTransition } from 'react';
-
-function ProgressLink({ href, children, ...props }) {
-  const { startNewProgress } = useNavigationProgress();
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    startTransition(() => {
-      startNewProgress();
-      window.location.href = href;
-    });
-  };
-
-  return (
-    <Link href={href} onClick={handleClick} {...props}>
-      {children}
-    </Link>
   );
 }
 ```
@@ -212,9 +210,34 @@ function ProgressLink({ href, children, ...props }) {
 
 Check out the [example](./example) directory for a complete Next.js application demonstrating the usage.
 
+## Testing
+
+This package includes a comprehensive test suite using Vitest:
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test
+
+# Run tests once (for CI)
+npm run test:run
+
+# Generate coverage report
+npm run test:coverage
+
+# View interactive test UI
+npm run test:ui
+```
+
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. Make sure to:
+
+1. Write tests for new features
+2. Ensure all tests pass
+3. Maintain or improve code coverage
 
 ## License
 
