@@ -13,18 +13,30 @@ export default function DetailPage() {
       </div>
 
       <Paper shadow="sm" p="md" withBorder>
-        <Title order={3} mb="md">How It Works</Title>
+        <Title order={3} mb="md">
+          How It Works
+        </Title>
         <List spacing="sm">
-          <List.Item>Uses React 19's `useOptimistic` for immediate UI updates</List.Item>
-          <List.Item>Implements smooth easing animations with custom timing</List.Item>
-          <List.Item>Automatically manages progress state during navigation</List.Item>
+          <List.Item>
+            Uses React 19&apos;s `useOptimistic` for immediate UI updates
+          </List.Item>
+          <List.Item>
+            Implements smooth easing animations with custom timing
+          </List.Item>
+          <List.Item>
+            Automatically manages progress state during navigation
+          </List.Item>
           <List.Item>Zero dependencies for minimal bundle impact</List.Item>
         </List>
       </Paper>
 
       <Paper shadow="sm" p="md" withBorder>
-        <Title order={3} mb="md">Quick Implementation</Title>
-        <Text size="sm" mb="sm">Add to your root layout:</Text>
+        <Title order={3} mb="md">
+          Quick Implementation
+        </Title>
+        <Text size="sm" mb="sm">
+          Add to your root layout:
+        </Text>
         <Code block>{`'use client';
 
 import { 
@@ -48,13 +60,19 @@ export default function RootLayout({ children }) {
       </Paper>
 
       <Paper shadow="sm" p="md" withBorder>
-        <Title order={4} mb="md">Continue Exploring</Title>
+        <Title order={4} mb="md">
+          Continue Exploring
+        </Title>
         <Stack>
           <NavigationLink href="/">
-            <Button fullWidth variant="light">Back to Home</Button>
+            <Button fullWidth variant="light">
+              Back to Home
+            </Button>
           </NavigationLink>
           <NavigationLink href="/profile">
-            <Button fullWidth variant="outline">Go to Profile</Button>
+            <Button fullWidth variant="outline">
+              Go to Profile
+            </Button>
           </NavigationLink>
         </Stack>
       </Paper>
