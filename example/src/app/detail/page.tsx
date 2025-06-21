@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
           Continue Exploring
         </Title>
         <Stack>
-          <NavigationLink href="/">
+          <NavigationLink href="/top">
             <Button fullWidth variant="light">
               Back to Home
             </Button>

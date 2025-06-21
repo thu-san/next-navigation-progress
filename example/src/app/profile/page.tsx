@@ -31,7 +31,7 @@ export default function ProfilePage() {
       <Paper shadow="sm" p="md" withBorder>
         <Title order={4} mb="md">Navigate to Other Pages</Title>
         <Stack>
-          <NavigationLink href="/">
+          <NavigationLink href="/top">
             <Button fullWidth variant="light">Back to Home</Button>
           </NavigationLink>
           <NavigationLink href="/detail">

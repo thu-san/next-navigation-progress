@@ -42,7 +42,7 @@ export default function RootLayout({
                 </NavigationLink>
                 <div className="flex gap-4">
                   <NavigationLink
-                    href="/"
+                    href="/top"
                     className="hover:text-blue-400 transition-colors"
                   >
                     Home

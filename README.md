@@ -12,7 +12,7 @@ A lightweight, customizable navigation progress bar for Next.js applications wit
 
 ## Demo
 
-🚀 **[View Live Demo](https://thu-san.github.io/next-navigation-progress/)**
+🚀 **[View Live Demo](https://thu-san.github.io/next-navigation-progress/top/)**
 
 Experience the smooth navigation progress bar in action with our interactive demo showcasing various navigation patterns and customization options.
 
