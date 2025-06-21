@@ -1,6 +1,6 @@
 {
   "name": "next-navigation-progress",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A customizable navigation progress bar for Next.js apps with React 19 support",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
