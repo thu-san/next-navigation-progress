@@ -1,5 +1,24 @@
 # Changelog
 
+## [v0.3.0](https://github.com/thu-san/next-navigation-progress/releases/tag/v0.3.0) - 2025-06-21
+
+## 🚀 Features
+- feat(testing): add GitHub Actions CI workflow and Vitest setup (97b54c4)
+
+## 🐛 Bug Fixes
+- fix: correct live demo link in README.md (048e54e)
+
+## 🔧 Other Changes
+- 0.3.0 (07843ea)
+- 0.2.0 (ff27a2e)
+- update example (bcd5a42)
+- a (01164d4)
+
+## 👥 Contributors
+- @Tun Lin Thu
+
+
+
 ## [v0.1.0](https://github.com/thu-san/next-navigation-progress/releases/tag/v0.1.0) - 2025-06-19
 
 ### 🚀 Features
