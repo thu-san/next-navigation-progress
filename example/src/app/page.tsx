@@ -1,6 +1,6 @@
 'use client';
 import { Button, NumberInput } from '@mantine/core';
-import { useNavigationProgress } from '../lib/next-navigation-progress';
+import { useNavigationProgress } from 'next-navigation-progress';
 import { startTransition, useState } from 'react';
 
 export default function Home() {

@@ -7,8 +7,8 @@ import { MantineProvider } from '@mantine/core';
 import {
   NextNavigationProgressBar,
   NextNavigationProgressProvider,
-} from '@/lib/next-navigation-progress';
-import NavigationLink from '@/lib/NavigationLink';
+  NavigationLink,
+} from 'next-navigation-progress';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
