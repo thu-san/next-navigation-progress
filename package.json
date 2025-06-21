@@ -15,7 +15,13 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest --coverage",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "release": "./scripts/release.sh",
+    "release:patch": "npm run release -- patch",
+    "release:minor": "npm run release -- minor",
+    "release:major": "npm run release -- major",
+    "demo:build": "npm run build && cd example && npm run build",
+    "demo:serve": "cd example && npx serve out"
   },
   "keywords": [
     "next",
@@ -29,9 +35,10 @@
   ],
   "author": "",
   "license": "MIT",
+  "homepage": "https://thu-san.github.io/next-navigation-progress",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/next-navigation-progress"
+    "url": "https://github.com/thu-san/next-navigation-progress"
   },
   "peerDependencies": {
     "next": ">=15.0.0",

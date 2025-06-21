@@ -32,19 +32,38 @@ export default function RootLayout({
       >
         <MantineProvider>
           <NextNavigationProgressProvider>
-            <ul className="flex gap-4 bg-gray-200 p-4">
-              <li>
-                <NavigationLink href="/">Home</NavigationLink>
-              </li>
-              <li>
-                <NavigationLink href="/profile">Profile</NavigationLink>
-              </li>
-              <li>
-                <NavigationLink href="/detail">Detail</NavigationLink>
-              </li>
-            </ul>
             <NextNavigationProgressBar />
-            <div className="p-4">{children}</div>
+            <nav className="flex items-center justify-between bg-gray-900 text-white p-4">
+              <div className="flex items-center gap-6">
+                <NavigationLink href="/" className="text-lg font-semibold hover:text-blue-400 transition-colors">
+                  next-navigation-progress
+                </NavigationLink>
+                <div className="flex gap-4">
+                  <NavigationLink href="/" className="hover:text-blue-400 transition-colors">
+                    Home
+                  </NavigationLink>
+                  <NavigationLink href="/profile" className="hover:text-blue-400 transition-colors">
+                    Profile
+                  </NavigationLink>
+                  <NavigationLink href="/detail" className="hover:text-blue-400 transition-colors">
+                    Detail
+                  </NavigationLink>
+                </div>
+              </div>
+              <a 
+                href="https://github.com/thu-san/next-navigation-progress" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-blue-400 transition-colors"
+              >
+                GitHub
+              </a>
+            </nav>
+            <main className="min-h-screen bg-gray-50">
+              <div className="max-w-4xl mx-auto p-6">
+                {children}
+              </div>
+            </main>
           </NextNavigationProgressProvider>
         </MantineProvider>
       </body>

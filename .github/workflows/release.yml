@@ -1,0 +1,126 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: tag_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Get previous tag
+        id: previous_tag
+        run: |
+          TAGS=($(git tag --sort=-version:refname | head -2))
+          if [ ${#TAGS[@]} -ge 2 ]; then
+            echo "PREVIOUS_TAG=${TAGS[1]}" >> $GITHUB_OUTPUT
+          else
+            echo "PREVIOUS_TAG=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -n "${{ steps.previous_tag.outputs.PREVIOUS_TAG }}" ]; then
+            PREVIOUS_TAG="${{ steps.previous_tag.outputs.PREVIOUS_TAG }}"
+          else
+            PREVIOUS_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          
+          # Generate changelog content
+          echo "# Changelog" > changelog_content.md
+          echo "" >> changelog_content.md
+          
+          # Features
+          FEATURES=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --grep="^feat" --grep="^feature" | sed 's/^feat[:(].*[):] //g' | sed 's/^feature[:(].*[):] //g')
+          if [ -n "$FEATURES" ]; then
+            echo "## 🚀 Features" >> changelog_content.md
+            echo "$FEATURES" >> changelog_content.md
+            echo "" >> changelog_content.md
+          fi
+          
+          # Bug Fixes
+          FIXES=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --grep="^fix" --grep="^bugfix" | sed 's/^fix[:(].*[):] //g' | sed 's/^bugfix[:(].*[):] //g')
+          if [ -n "$FIXES" ]; then
+            echo "## 🐛 Bug Fixes" >> changelog_content.md
+            echo "$FIXES" >> changelog_content.md
+            echo "" >> changelog_content.md
+          fi
+          
+          # Documentation
+          DOCS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --grep="^docs" | sed 's/^docs[:(].*[):] //g')
+          if [ -n "$DOCS" ]; then
+            echo "## 📚 Documentation" >> changelog_content.md
+            echo "$DOCS" >> changelog_content.md
+            echo "" >> changelog_content.md
+          fi
+          
+          # Other Changes
+          OTHERS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --invert-grep --grep="^feat" --grep="^feature" --grep="^fix" --grep="^bugfix" --grep="^docs" --grep="^chore" --grep="^ci" --grep="^test" --grep="^build" --grep="^style" --grep="^refactor" --grep="^perf")
+          if [ -n "$OTHERS" ]; then
+            echo "## 🔧 Other Changes" >> changelog_content.md
+            echo "$OTHERS" >> changelog_content.md
+            echo "" >> changelog_content.md
+          fi
+          
+          # Contributors
+          echo "## 👥 Contributors" >> changelog_content.md
+          git log ${PREVIOUS_TAG}..HEAD --pretty=format:"%an" | sort | uniq | sed 's/^/- @/g' >> changelog_content.md
+          echo "" >> changelog_content.md
+          
+          # Full Changelog link
+          if [ -n "${{ steps.previous_tag.outputs.PREVIOUS_TAG }}" ]; then
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.previous_tag.outputs.PREVIOUS_TAG }}...v${{ steps.tag_version.outputs.VERSION }}" >> changelog_content.md
+          fi
+
+      - name: Update CHANGELOG.md
+        run: |
+          # Create new changelog entry
+          echo "# Changelog" > new_changelog.md
+          echo "" >> new_changelog.md
+          echo "## [v${{ steps.tag_version.outputs.VERSION }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.tag_version.outputs.VERSION }}) - $(date +%Y-%m-%d)" >> new_changelog.md
+          echo "" >> new_changelog.md
+          
+          # Add the generated content (skip the header)
+          tail -n +3 changelog_content.md >> new_changelog.md
+          echo "" >> new_changelog.md
+          
+          # Append existing changelog if it exists
+          if [ -f CHANGELOG.md ]; then
+            # Skip the header line of existing changelog
+            tail -n +2 CHANGELOG.md >> new_changelog.md
+          fi
+          
+          # Replace the changelog
+          mv new_changelog.md CHANGELOG.md
+          
+          # Commit the updated changelog
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add CHANGELOG.md
+          git commit -m "docs: update CHANGELOG.md for v${{ steps.tag_version.outputs.VERSION }} [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:main || echo "No changes to push"
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.tag_version.outputs.VERSION }}
+          release_name: v${{ steps.tag_version.outputs.VERSION }}
+          body_path: changelog_content.md
+          draft: false
+          prerelease: false

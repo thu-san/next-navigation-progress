@@ -40,3 +40,6 @@ out/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Temporary files
+changelog_content.md

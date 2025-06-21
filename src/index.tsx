@@ -35,6 +35,10 @@ const Context = createContext<{
   stateObj: { showing: false },
 });
 
+/**
+ * Internal hook for managing progress state
+ * @internal
+ */
 export const useProgress = () => {
   const [optimisticObj, setOptimisticObj] = useOptimistic({
     loading: false,
@@ -124,6 +128,18 @@ export const useProgress = () => {
   };
 };
 
+/**
+ * Provider component that manages navigation progress state
+ * Wrap your application with this provider to enable navigation progress functionality
+ * 
+ * @example
+ * ```tsx
+ * <NextNavigationProgressProvider>
+ *   <NextNavigationProgressBar />
+ *   {children}
+ * </NextNavigationProgressProvider>
+ * ```
+ */
 export const NextNavigationProgressProvider = ({
   children,
 }: {
@@ -140,6 +156,18 @@ export const NextNavigationProgressProvider = ({
   );
 };
 
+/**
+ * Progress bar component that displays navigation progress
+ * Must be used inside NextNavigationProgressProvider
+ * 
+ * @example
+ * ```tsx
+ * <NextNavigationProgressProvider>
+ *   <NextNavigationProgressBar />
+ *   {children}
+ * </NextNavigationProgressProvider>
+ * ```
+ */
 export const NextNavigationProgressBar = () => {
   const { progress, stateObj } = useContext(Context);
 
@@ -162,10 +190,44 @@ export const NextNavigationProgressBar = () => {
   );
 };
 
+/**
+ * Hook to access navigation progress state and controls
+ * Must be used inside NextNavigationProgressProvider
+ * 
+ * @returns {Object} Progress state and control functions
+ * @returns {number} progress - Current progress value (0-100)
+ * @returns {Function} startNewProgress - Function to start a new progress animation
+ * @returns {Object} optimisticObj - Object containing loading state
+ * @returns {Object} stateObj - Object containing visibility state
+ * 
+ * @example
+ * ```tsx
+ * const { progress, startNewProgress, optimisticObj, stateObj } = useNavigationProgress();
+ * ```
+ */
 export const useNavigationProgress = () => {
   return useContext(Context);
 };
 
+/**
+ * Pre-configured Link component that automatically triggers navigation progress
+ * Wraps Next.js Link component with progress bar integration
+ * 
+ * @param {React.ReactNode} children - Link content
+ * @param {string} className - CSS class name
+ * @param {string} href - Destination URL
+ * @param {string} [target] - Link target attribute
+ * @param {Function} [onClick] - Custom click handler
+ * @param {boolean} [prefetch] - Next.js prefetch behavior
+ * @param {React.CSSProperties} [style] - Inline styles
+ * 
+ * @example
+ * ```tsx
+ * <NavigationLink href="/about" className="nav-link">
+ *   About Page
+ * </NavigationLink>
+ * ```
+ */
 export const NavigationLink = memo(function NavigationLink({
   children,
   className,
